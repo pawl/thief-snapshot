@@ -32,7 +32,10 @@ PHOTO_LIMIT = 10  # number of photos to take of the thief
 
 
 def detect_expected_ip():
-    """Pings the expected_ip in settings.py to see if the device is present."""
+    """Pings the expected_ip in settings.py to see if the device is present.
+
+    Credit to homeassistant's device_tracker/ping.py
+    """
     ping_cmd = ['ping', '-n', '-q', '-c1', '-W1', settings.expected_ip]
 
     pinger = subprocess.Popen(ping_cmd,
