@@ -1,0 +1,2 @@
+amcrest==1.2.0
+python-telegram-bot==6.1.0
