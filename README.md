@@ -1,5 +1,14 @@
 # thief-snapshot
-Sends you a snapshot if motion is detected from an amcrest camera while your phone is not on the network.
+
+Watches for motion on an amcrest camera and notifies you using telegram if your phone is not on the network.
+
+
+Requirements
+-----------
+
+* Amcrest Camera
+* DD-WRT Router
+* Telegram API Key & Chat ID
 
 
 Installation
