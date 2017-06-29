@@ -19,4 +19,4 @@ Next, you will need to install the requirements:
 Usage
 -----------
 
-    $ python3 main.py
+    $ python main.py
