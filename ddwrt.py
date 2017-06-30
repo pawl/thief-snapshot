@@ -41,7 +41,7 @@ def is_mac_active(expected_mac):
 
     active_clients = data.get('active_wireless', None)
     if not active_clients:
-        raise Exception("No active wireless clients.")
+        return []
 
     # The DD-WRT UI uses its own data format and then
     # regex's out values so this is done here too
