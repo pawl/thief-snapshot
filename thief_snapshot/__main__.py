@@ -87,7 +87,7 @@ def main():
             device_missing_count = 0
         else:
             device_missing_count += 1
-            logging.info('MAC address missing count: %s', device_missing_count)
+            logging.info('Presence undetected count: %s', device_missing_count)
 
         motion_detected = camera.is_motion_detected
         logging.info('Motion detected? %s', motion_detected)
