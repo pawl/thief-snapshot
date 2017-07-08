@@ -36,7 +36,7 @@ TODO
 
 * Add support for more cameras types.
 * Add support for more presence detection types.
-
+* Add more notification systems and make telegram notifications optional.
 
 Credit
 ------
