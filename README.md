@@ -1,10 +1,10 @@
 # thief-snapshot
 
-Watches for motion on an amcrest camera and notifies you using telegram if your phone is not on the network.
+Detects motion with a camera and sends snapshots using a telegram chatbot if your phone is not on wifi.
 
 
 Requirements
------------
+------------
 
 * Amcrest Camera
 * DD-WRT Router
@@ -14,18 +14,31 @@ Requirements
 Installation
 -----------
 
-First you will need to copy example_settings.py to settings.py:
+Install the package:
 
-    $ cp example_settings.py settings.py
+    $ pip install thief_snapshot[amcrest]
 
-Once the copy is complete, you will need to fill settings.py with your own information.
+Generate a settings file:
 
-Next, you will need to install the requirements:
+    $ thief_snapshot_generate_settings
 
-    $ pip install -r requirements.txt
+Edit the generated settings.ini and fill in your own settings.
 
 
 Usage
 -----------
 
-    $ python main.py
+    $ thief_snapshot settings.ini
+
+
+TODO
+----
+
+* Add support for more cameras types.
+* Add support for more presence detection types.
+
+
+Credit
+------
+
+The ddwrt presence detection code was mostly copied from home-assistant.
