@@ -15,12 +15,3 @@ class BaseCamera(object):
             file object
         """
         raise NotImplementedError()
-
-    @property
-    def is_motion_detected(self):
-        """Indicates whether motion is detected from the camera.
-
-        Returns:
-            boolean -- whether the expected MAC address was detected
-        """
-        raise NotImplementedError()

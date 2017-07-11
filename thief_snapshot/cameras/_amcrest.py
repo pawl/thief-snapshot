@@ -20,12 +20,3 @@ class AmcrestCamera(BaseCamera):
             file object
         """
         return self.camera.snapshot(0)
-
-    @property
-    def is_motion_detected(self):
-        """Indicates whether motion is detected from the camera.
-
-        Returns:
-            boolean -- whether the expected MAC address was detected
-        """
-        return self.camera.is_motion_detected

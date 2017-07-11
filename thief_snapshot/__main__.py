@@ -8,7 +8,7 @@ import time
 import telegram
 from configparser import ConfigParser
 
-from thief_snapshot import cameras, presence_detection
+from thief_snapshot import cameras, presence_detection, motion_detection
 
 
 logging.basicConfig(
@@ -30,9 +30,15 @@ PRESENCE_DETECTOR_CLASSES = {
     'ddwrt': presence_detection.DDWRTPresenceDetector,
 }
 
+MOTION_DETECTOR_CLASSES = {
+    'amcrest': motion_detection.AmcrestCameraMotionDetector,
+}
+
 
 def get_camera(settings):
-    """Determines the camera class based on the camera_type setting."""
+    """Determines the camera class based on the camera type setting initializes
+    it.
+    """
     Camera = CAMERA_CLASSES.get(settings['camera']['type'])
     if Camera is None:
         raise Exception('Invalid camera_type setting.')
@@ -46,14 +52,14 @@ def get_camera(settings):
 
 
 def get_presence_detector(settings):
-    """Determines the presence detector class based on the
-    presence_detector_type setting.
+    """Determines the presence detector class based on the presence_detector
+    type setting initializes it.
     """
     PresenceDetector = PRESENCE_DETECTOR_CLASSES.get(
         settings['presence_detector']['type']
     )
     if PresenceDetector is None:
-        raise Exception('Invalid presence_detector_type setting.')
+        raise Exception('Invalid presence_detector type setting.')
 
     return PresenceDetector(
         settings['presence_detector']['ip'],
@@ -61,6 +67,24 @@ def get_presence_detector(settings):
         settings['presence_detector']['username'],
         settings['presence_detector']['password'],
         settings['presence_detector']['expected_macs'].split(','),
+    )
+
+
+def get_motion_detector(settings):
+    """Determines the motion detector class based on the motion_detector type
+    setting and initializes it.
+    """
+    MotionDetector = MOTION_DETECTOR_CLASSES.get(
+        settings['motion_detector']['type']
+    )
+    if MotionDetector is None:
+        raise Exception('Invalid motion_detector type setting.')
+
+    return MotionDetector(
+        settings['motion_detector']['ip'],
+        int(settings['motion_detector']['port']),
+        settings['motion_detector']['username'],
+        settings['motion_detector']['password'],
     )
 
 
@@ -72,13 +96,14 @@ def main():
     settings = ConfigParser()
     settings.read(args.config)
 
-    device_missing_count = 0
-
     presence_detector = get_presence_detector(settings)
+    motion_detector = get_motion_detector(settings)
     camera = get_camera(settings)
 
     # TODO: support multiple notification systems
     bot = telegram.Bot(token=settings['telegram']['api_key'])
+
+    device_missing_count = 0
 
     while True:
         presence_detected = presence_detector.is_presence_detected
@@ -89,7 +114,7 @@ def main():
             device_missing_count += 1
             logging.info('Presence undetected count: %s', device_missing_count)
 
-        motion_detected = camera.is_motion_detected
+        motion_detected = motion_detector.is_motion_detected
         logging.info('Motion detected? %s', motion_detected)
 
         if (device_missing_count > MAX_DEVICE_MISSING_COUNT) and motion_detected:
