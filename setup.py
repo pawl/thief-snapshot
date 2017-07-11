@@ -22,7 +22,7 @@ except ImportError:
 
 setup(
     name='thief-snapshot',
-    version='0.1.2',
+    version='0.2.0',
     description='Detects motion with a camera and sends snapshots using a '
                 'telegram chatbot if your phone is not on wifi.',
     url='https://github.com/pawl/thief-snapshot',

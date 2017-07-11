@@ -2,20 +2,17 @@
 is not on the network while motion is detected.
 """
 import argparse
-import logging
 import time
 
 import telegram
 from configparser import ConfigParser
 
-from thief_snapshot import cameras, presence_detection, motion_detection
-
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+from thief_snapshot import (
+    cameras,
+    presence_detection,
+    motion_detection,
+    logger,
 )
-logger = logging.getLogger(__name__)
 
 # iPhones will occasionally drop off the network and then re-appear
 MAX_DEVICE_MISSING_COUNT = 180
@@ -107,15 +104,15 @@ def main():
 
     while True:
         presence_detected = presence_detector.is_presence_detected
-        logging.info('Presence detected? %s', presence_detected)
+        logger.info('Presence detected? %s', presence_detected)
         if presence_detected:
             device_missing_count = 0
         else:
             device_missing_count += 1
-            logging.info('Presence undetected count: %s', device_missing_count)
+            logger.info('Presence undetected count: %s', device_missing_count)
 
         motion_detected = motion_detector.is_motion_detected
-        logging.info('Motion detected? %s', motion_detected)
+        logger.info('Motion detected? %s', motion_detected)
 
         if (device_missing_count > MAX_DEVICE_MISSING_COUNT) and motion_detected:
             for i in range(PHOTO_LIMIT):
@@ -123,13 +120,13 @@ def main():
                     chat_id=settings['telegram']['chat_id'],
                     photo=camera.snapshot(),
                 )
-                logging.info('Waiting between snapshots...')
+                logger.info('Waiting between snapshots...')
                 time.sleep(1)
 
             # give the telegram API a break
             time.sleep(30)
 
-        logging.info('Waiting...')
+        logger.info('Waiting...')
         time.sleep(1)
 
 

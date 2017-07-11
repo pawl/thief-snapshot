@@ -3,6 +3,7 @@ import re
 
 import requests
 
+from thief_snapshot import logger
 from thief_snapshot.presence_detection.base import BasePresenceDetector
 
 
@@ -32,13 +33,20 @@ class DDWRTPresenceDetector(BasePresenceDetector):
         Returns:
             boolean -- whether the expected MAC address was detected
         """
-        url = 'http://{}:{}/Status_Wireless.live.asp'.format(self.ip, self.port)
-        response = requests.get(
-            url,
-            auth=(self.username, self.password),
-            timeout=4,
+        url = 'http://{}:{}/Status_Wireless.live.asp'.format(
+            self.ip,
+            self.port,
         )
-        response.raise_for_status()
+        try:
+            response = requests.get(
+                url,
+                auth=(self.username, self.password),
+                timeout=4,
+            )
+            response.raise_for_status()
+        except requests.exceptions.RequestException:
+            logger.exception('Failed to get WIFI clients from DD-WRT router.')
+            return False
 
         data = _parse_ddwrt_response(response.text)
         if not data:
